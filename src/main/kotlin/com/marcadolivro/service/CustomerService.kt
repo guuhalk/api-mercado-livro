@@ -9,7 +9,7 @@ class CustomerService(
     val customerRepository: CustomerRepository
 ) {
 
-    fun findAllCustomer(name: String?): List<Customer> {
+    fun findAllCustomers(name: String?): List<Customer> {
         name?.let {
             return customerRepository.findByNameContaining(name)
         }

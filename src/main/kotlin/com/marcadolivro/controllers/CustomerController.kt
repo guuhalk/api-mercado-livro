@@ -14,7 +14,7 @@ class CustomerController(val customerService: CustomerService) {
 
     @GetMapping
     fun findAllCustomer(@RequestParam name: String?): List<Customer>
-        = customerService.findAllCustomer(name)
+        = customerService.findAllCustomers(name)
 
     @GetMapping("/{id}")
     fun findCustomerById(@PathVariable id: Int): Customer
