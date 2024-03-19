@@ -1,39 +1,40 @@
 package com.marcadolivro.service
 
 import com.marcadolivro.model.Customer
+import com.marcadolivro.repository.CustomerRepository
 import org.springframework.stereotype.Service
 
 @Service
-class CustomerService {
-
-    val customers = mutableListOf<Customer>()
+class CustomerService(
+    val customerRepository: CustomerRepository
+) {
 
     fun findAllCustomer(name: String?): List<Customer> {
         name?.let {
-            return customers.filter { it.name.contains(name,true) }
+            return customerRepository.findByNameContaining(name)
         }
-        return customers
+        return customerRepository.findAll()
     }
 
-    fun findCustomerById(id: String): Customer {
-        return customers.filter { it.id == id }.first()
+    fun findCustomerById(id: Int): Customer {
+        return customerRepository.findById(id).get()
     }
 
-    fun createCustomer(customer: Customer): MutableList<Customer> {
-        val id = if (customers.isEmpty()) 1 else { customers.last().id!!.toInt() + 1 }.toString()
-        customer.id = id
-        customers.add(customer)
-        return customers
+    fun createCustomer(customer: Customer){
+        customerRepository.save(customer)
     }
 
     fun updateCustomer(customer: Customer){
-        customers.filter { it.id == customer.id }.first().let {
-            it.name = customer.name
-            it.email = customer.email
-        }
+        if(!customerRepository.existsById(customer.id!!))
+            throw Exception()
+
+        customerRepository.save(customer)
     }
 
-    fun deleteCustomer(id: String){
-        customers.removeIf{it.id == id}
+    fun deleteCustomer(id: Int){
+        if(!customerRepository.existsById(id))
+            throw Exception()
+
+        customerRepository.deleteById(id)
     }
 }

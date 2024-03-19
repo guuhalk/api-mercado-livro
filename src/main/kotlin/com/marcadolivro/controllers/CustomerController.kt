@@ -1,8 +1,8 @@
 package com.marcadolivro.controllers
 
 import com.marcadolivro.model.Customer
-import com.marcadolivro.model.request.PostCustomerRequest
-import com.marcadolivro.model.request.PutCustomerRequest
+import com.marcadolivro.model.dto.PostCustomerRequest
+import com.marcadolivro.model.dto.PutCustomerRequest
 import com.marcadolivro.service.CustomerService
 import com.marcadolivro.tools.toCustomer
 import org.springframework.http.HttpStatus
@@ -17,22 +17,22 @@ class CustomerController(val customerService: CustomerService) {
         = customerService.findAllCustomer(name)
 
     @GetMapping("/{id}")
-    fun findCustomerById(@PathVariable id: String): Customer
+    fun findCustomerById(@PathVariable id: Int): Customer
         = customerService.findCustomerById(id)
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createCustomer(@RequestBody customer: PostCustomerRequest): MutableList<Customer>
+    fun createCustomer(@RequestBody customer: PostCustomerRequest)
         = customerService.createCustomer(customer.toCustomer())
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun updateCustomer(@PathVariable id: String,@RequestBody customer: PutCustomerRequest )
+    fun updateCustomer(@PathVariable id: Int,@RequestBody customer: PutCustomerRequest )
         = customerService.updateCustomer(customer.toCustomer(id))
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteCustomer(@PathVariable id: String)
+    fun deleteCustomer(@PathVariable id: Int)
         = customerService.deleteCustomer(id)
 
 }
