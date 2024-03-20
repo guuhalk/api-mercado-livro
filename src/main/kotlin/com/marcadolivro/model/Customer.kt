@@ -1,5 +1,6 @@
 package com.marcadolivro.model
 
+import com.marcadolivro.model.enums.CustomerStatus
 import jakarta.persistence.*
 
 @Entity(name = "customer")
@@ -13,5 +14,9 @@ data class Customer (
     var name: String,
 
     @Column
-    var email: String
+    var email: String,
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    var status: CustomerStatus
 )

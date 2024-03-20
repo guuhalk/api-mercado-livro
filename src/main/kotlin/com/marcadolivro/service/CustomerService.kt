@@ -1,12 +1,14 @@
 package com.marcadolivro.service
 
 import com.marcadolivro.model.Customer
+import com.marcadolivro.model.enums.CustomerStatus
 import com.marcadolivro.repository.CustomerRepository
 import org.springframework.stereotype.Service
 
 @Service
 class CustomerService(
-    val customerRepository: CustomerRepository
+    val customerRepository: CustomerRepository,
+    val bookService: BookService
 ) {
 
     fun findAllCustomers(name: String?): List<Customer> {
@@ -32,9 +34,9 @@ class CustomerService(
     }
 
     fun deleteCustomer(id: Int){
-        if(!customerRepository.existsById(id))
-            throw Exception()
-
-        customerRepository.deleteById(id)
+        var customer = findCustomerById(id)
+        bookService.deleteByCustumer(customer)
+        customer.status = CustomerStatus.INATIVO
+        customerRepository.save(customer)
     }
 }

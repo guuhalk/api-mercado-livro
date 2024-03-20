@@ -1,16 +1,15 @@
 package com.marcadolivro.controllers
 
-import com.marcadolivro.model.Book
-import com.marcadolivro.model.Customer
-import com.marcadolivro.model.dto.PostBookRequest
-import com.marcadolivro.model.dto.PostCustomerRequest
-import com.marcadolivro.model.dto.PutBookRequest
-import com.marcadolivro.model.dto.PutCustomerRequest
-import com.marcadolivro.model.enums.BookStatus
+import com.marcadolivro.model.dto.request.PostBookRequest
+import com.marcadolivro.model.dto.request.PutBookRequest
+import com.marcadolivro.model.dto.response.BookResponse
 import com.marcadolivro.service.BookService
 import com.marcadolivro.service.CustomerService
 import com.marcadolivro.tools.toBook
-import com.marcadolivro.tools.toCustomer
+import com.marcadolivro.tools.toResponse
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -22,16 +21,16 @@ class BookController (
 ) {
 
     @GetMapping
-    fun findAllBooks(@RequestParam name: String?): List<Book>
-            = bookService.findAllbooks(name)
+    fun findAllBooks(@PageableDefault(page = 0, size = 10) pageable: Pageable): Page<BookResponse>
+            = bookService.findAllbooks(pageable).map { it.toResponse() }
 
     @GetMapping("/active")
-    fun findAllBooksStatusActive(): List<Book>
-            = bookService.findAllbooksStatusActive()
+    fun findAllBooksStatusActive(@PageableDefault(page = 0, size = 10) pageable: Pageable): Page<BookResponse>
+            = bookService.findAllbooksStatusActive(pageable).map { it.toResponse() }
 
     @GetMapping("/{id}")
-    fun findBookById(@PathVariable id: Int): Book
-            = bookService.findBookById(id)
+    fun findBookById(@PathVariable id: Int): BookResponse
+            = bookService.findBookById(id).toResponse()
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

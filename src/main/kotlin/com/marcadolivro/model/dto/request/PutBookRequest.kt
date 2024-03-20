@@ -1,4 +1,4 @@
-package com.marcadolivro.model.dto
+package com.marcadolivro.model.dto.request
 
 import java.math.BigDecimal
 

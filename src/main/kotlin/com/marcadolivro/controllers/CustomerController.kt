@@ -1,10 +1,11 @@
 package com.marcadolivro.controllers
 
-import com.marcadolivro.model.Customer
-import com.marcadolivro.model.dto.PostCustomerRequest
-import com.marcadolivro.model.dto.PutCustomerRequest
+import com.marcadolivro.model.dto.request.PostCustomerRequest
+import com.marcadolivro.model.dto.request.PutCustomerRequest
+import com.marcadolivro.model.dto.response.CustomerResponse
 import com.marcadolivro.service.CustomerService
 import com.marcadolivro.tools.toCustomer
+import com.marcadolivro.tools.toResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -13,12 +14,12 @@ import org.springframework.web.bind.annotation.*
 class CustomerController(val customerService: CustomerService) {
 
     @GetMapping
-    fun findAllCustomer(@RequestParam name: String?): List<Customer>
-        = customerService.findAllCustomers(name)
+    fun findAllCustomer(@RequestParam name: String?): List<CustomerResponse>
+        = customerService.findAllCustomers(name).map{it.toResponse()}
 
     @GetMapping("/{id}")
-    fun findCustomerById(@PathVariable id: Int): Customer
-        = customerService.findCustomerById(id)
+    fun findCustomerById(@PathVariable id: Int): CustomerResponse
+        = customerService.findCustomerById(id).toResponse()
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -27,8 +28,10 @@ class CustomerController(val customerService: CustomerService) {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun updateCustomer(@PathVariable id: Int,@RequestBody customer: PutCustomerRequest )
-        = customerService.updateCustomer(customer.toCustomer(id))
+    fun updateCustomer(@PathVariable id: Int,@RequestBody customer: PutCustomerRequest){
+        val customerSaved = customerService.findCustomerById(id)
+        customerService.updateCustomer(customer.toCustomer(customerSaved))
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

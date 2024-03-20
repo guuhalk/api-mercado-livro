@@ -1,4 +1,4 @@
-package com.marcadolivro.model.dto
+package com.marcadolivro.model.dto.request
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.marcadolivro.model.enums.BookStatus
